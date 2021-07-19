@@ -13,11 +13,13 @@ import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.JTextField;
 import javax.swing.JRadioButton;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JTable;
@@ -26,6 +28,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class App extends JFrame {
 
@@ -78,9 +82,31 @@ public class App extends JFrame {
 		factory.close();
 	}
 	
-	private void create() {
+	public void create(JTable tabla) {
 		
+		String dni,nombres,apellidos,nrocel,genero;
 		
+		DefaultTableModel model=new DefaultTableModel();
+		ArrayList<Object> nombreColumna=new ArrayList<>();
+		
+		String jpql="from patient";
+		Query query=entityManager.createQuery(jpql);
+		
+		@SuppressWarnings("unchecked")
+		List<Paciente>listPaciente=query.getResultList();
+		
+		nombreColumna.removeAll(nombreColumna);
+		
+		nombreColumna.add("ID_PACIENTE");
+		nombreColumna.add("DNI");
+		nombreColumna.add("NOMBRES");
+		nombreColumna.add("APELLIDOS");
+		nombreColumna.add("NRO CELULAR");
+		nombreColumna.add("GENERO");
+		
+		for(Object columna:nombreColumna) {
+			model.addColumn(columna);
+		}
 		
 	}
 
