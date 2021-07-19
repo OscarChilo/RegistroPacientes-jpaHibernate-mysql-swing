@@ -30,6 +30,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JScrollPane;
 
 public class App extends JFrame {
 
@@ -81,11 +82,20 @@ public class App extends JFrame {
 		entityManager.close();
 		factory.close();
 	}
+	private void cargarTabla() {
+		begin();
+		listarTabla(table);
+		end();
+	}
+	private static void eliminar(int clave) {
+		Paciente reference=entityManager.find(Paciente.class, clave);
+		entityManager.remove(reference);
+	}
 
 	public void listarTabla(JTable tabla) {
 
-		DefaultTableModel model = new DefaultTableModel();
-		ArrayList<Object> nombreColumna = new ArrayList<>();
+		DefaultTableModel model = new DefaultTableModel(null, new Object[] {"ID_PACIENTE","DNI","NOMBRES","APELLIDOS","NRO CELULAR","GENERO"});
+		
 
 		String jpql = "SELECT p FROM Paciente p";
 		Query query = entityManager.createQuery(jpql);
@@ -93,24 +103,35 @@ public class App extends JFrame {
 		@SuppressWarnings("unchecked")
 		List<Paciente> listPaciente = query.getResultList();
 
-		nombreColumna.removeAll(nombreColumna);
-
-		nombreColumna.add("ID_PACIENTE");
-		nombreColumna.add("DNI");
-		nombreColumna.add("NOMBRES");
-		nombreColumna.add("APELLIDOS");
-		nombreColumna.add("NRO CELULAR");
-		nombreColumna.add("GENERO");
-
-		for (Object columna : nombreColumna) {
-			model.addColumn(columna);
-		}
+		
 		for (Paciente p : listPaciente) {
 			model.addRow(new Object[] { p.getIdPaciente(), p.getDni(), p.getNombres(), p.getApellidos(), p.getNroCel(),
 					p.getGenero() });
 		}
 		tabla.setModel(model);
 
+	}
+	public void listBuscar(JTable tabla,int clave){
+		
+		DefaultTableModel model = new DefaultTableModel();
+		
+		model.addColumn("Id");
+        model.addColumn("DNI");
+        model.addColumn("NOMBRES");
+        model.addColumn("APELLIDOS");
+        model.addColumn("NROCELULAR");
+        model.addColumn("GENERO");
+		
+		Paciente paciente = entityManager.find(Paciente.class, clave);
+		
+	    System.out.println(paciente.getNombres());
+		
+			model.addRow(new Object[] { paciente.getIdPaciente(), paciente.getDni(), paciente.getNombres(), paciente.getApellidos(), paciente.getNroCel(),
+					paciente.getGenero()});
+		//}
+		tabla.setModel(model);
+	    
+		
 	}
 
 	/**
@@ -237,6 +258,8 @@ public class App extends JFrame {
 				txtApellidos.setText("");
 				txtNro.setText("");
 				txtDni.requestFocus();
+
+				cargarTabla();
 			}
 		});
 		btnAgregar.setHorizontalAlignment(SwingConstants.LEFT);
@@ -251,6 +274,16 @@ public class App extends JFrame {
 		contentPane.add(btnActualizar);
 
 		JButton btnBuscar = new JButton("BUSCAR");
+		btnBuscar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int id;
+				id=Integer.parseInt(txtBuscar.getText());
+				begin();
+				listBuscar(table,id);
+				end();
+			}
+		});
 		btnBuscar.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		btnBuscar.setBounds(239, 357, 89, 23);
 		contentPane.add(btnBuscar);
@@ -263,17 +296,18 @@ public class App extends JFrame {
 		txtBuscar.setBounds(83, 358, 146, 20);
 		contentPane.add(txtBuscar);
 		txtBuscar.setColumns(10);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(346, 36, 428, 314);
+		contentPane.add(scrollPane);
 
 		table = new JTable();
-		table.setBounds(346, 36, 428, 314);
-		contentPane.add(table);
+		scrollPane.setViewportView(table);
 
 		JButton btnActTb = new JButton("ACTUALIZAR TABLA");
 		btnActTb.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				begin();
-				listarTabla(table);
-				end();
+				cargarTabla();
 			}
 		});
 		btnActTb.setFont(new Font("Tahoma", Font.PLAIN, 10));
@@ -281,6 +315,17 @@ public class App extends JFrame {
 		contentPane.add(btnActTb);
 
 		JButton btnEliminar = new JButton("ELIMINAR PA.");
+		btnEliminar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int idPaciente;
+				idPaciente=Integer.parseInt(txtBuscar.getText());
+				begin();
+				eliminar(idPaciente);
+				end();
+				
+				cargarTabla();
+			}
+		});
 		btnEliminar.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		btnEliminar.setBounds(229, 306, 99, 23);
 		contentPane.add(btnEliminar);
