@@ -12,6 +12,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
+import java.awt.Point;
+
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JTextField;
@@ -51,6 +53,7 @@ public class App extends JFrame {
 	Paciente obj = new Paciente();
 
 	ButtonGroup g1 = new ButtonGroup();
+	private JTable tabla2;
 
 	/**
 	 * Launch the application.
@@ -74,6 +77,10 @@ public class App extends JFrame {
 		entityManager = factory.createEntityManager();
 
 		entityManager.getTransaction().begin();
+	}
+	
+	private static void create() {
+		
 	}
 
 	private static void end() {
@@ -130,8 +137,7 @@ public class App extends JFrame {
 					paciente.getGenero()});
 		//}
 		tabla.setModel(model);
-	    
-		
+
 	}
 
 	/**
@@ -139,7 +145,7 @@ public class App extends JFrame {
 	 */
 	public App() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 800, 451);
+		setBounds(100, 100, 840, 451);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -153,7 +159,7 @@ public class App extends JFrame {
 
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Registro", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.setBounds(10, 36, 326, 252);
+		panel.setBounds(10, 36, 326, 269);
 		contentPane.add(panel);
 		panel.setLayout(null);
 
@@ -225,21 +231,22 @@ public class App extends JFrame {
 		rdbtnFemenino.setBounds(217, 205, 99, 23);
 		panel.add(rdbtnFemenino);
 
-		JButton btnAgregar = new JButton("AGREGAR PA.");
+		JButton btnAgregar = new JButton("AGREGAR");
 		btnAgregar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				String dni, nombres, apellidos, nrocel, genero;
+				
 
 				begin();
+				
+				String dni, nombres, apellidos, nrocel, genero;
+				Paciente newPaciente = new Paciente();
 
 				dni = txtDni.getText();
 				nombres = txtNombres.getText();
 				apellidos = txtApellidos.getText();
 				nrocel = txtNro.getText();
 				genero = obj.getGenero();
-
-				Paciente newPaciente = new Paciente();
 
 				newPaciente.setDni(dni);
 				newPaciente.setNombres(nombres);
@@ -251,25 +258,65 @@ public class App extends JFrame {
 
 				end();
 
-				JOptionPane.showMessageDialog(null, "Paciente registrado con exito");
+				JOptionPane.showMessageDialog(null, "Paciente NUEVO REGISTRADO con EXITO!!");
 
 				txtDni.setText("");
 				txtNombres.setText("");
 				txtApellidos.setText("");
 				txtNro.setText("");
+				g1.clearSelection();
 				txtDni.requestFocus();
 
 				cargarTabla();
 			}
 		});
-		btnAgregar.setHorizontalAlignment(SwingConstants.LEFT);
-		btnAgregar.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		btnAgregar.setFont(new Font("Tahoma", Font.BOLD, 9));
 		btnAgregar.setBounds(10, 306, 99, 23);
 		contentPane.add(btnAgregar);
 
-		JButton btnActualizar = new JButton("ACTUALIZAR PA.");
-		btnActualizar.setHorizontalAlignment(SwingConstants.LEFT);
-		btnActualizar.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		JButton btnActualizar = new JButton("ACTUALIZAR");
+		btnActualizar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				begin();
+				
+				int idPaciente;
+				String dni, nombres, apellidos, nrocel, genero;
+				Paciente existPaciente = new Paciente();
+
+				idPaciente=Integer.parseInt(txtId.getText());
+				dni = txtDni.getText();
+				nombres = txtNombres.getText();
+				apellidos = txtApellidos.getText();
+				nrocel = txtNro.getText();
+				genero = obj.getGenero();
+
+				existPaciente.setIdPaciente(idPaciente);
+				existPaciente.setDni(dni);
+				existPaciente.setNombres(nombres);
+				existPaciente.setApellidos(apellidos);
+				existPaciente.setNroCel(nrocel);
+				existPaciente.setGenero(genero);
+				
+				entityManager.merge(existPaciente);
+				
+				end();
+				
+				JOptionPane.showMessageDialog(null, "Paciente ACTUALIZADO con EXITO!!");
+				
+				txtId.setText("");
+				txtDni.setText("");
+				txtNombres.setText("");
+				txtApellidos.setText("");
+				txtNro.setText("");
+				g1.clearSelection();
+				txtDni.requestFocus();
+
+				cargarTabla();
+				
+			}
+		});
+		btnActualizar.setFont(new Font("Tahoma", Font.BOLD, 9));
 		btnActualizar.setBounds(113, 307, 113, 23);
 		contentPane.add(btnActualizar);
 
@@ -284,7 +331,7 @@ public class App extends JFrame {
 				end();
 			}
 		});
-		btnBuscar.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		btnBuscar.setFont(new Font("Tahoma", Font.BOLD, 9));
 		btnBuscar.setBounds(239, 357, 89, 23);
 		contentPane.add(btnBuscar);
 
@@ -298,11 +345,28 @@ public class App extends JFrame {
 		txtBuscar.setColumns(10);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(346, 36, 428, 314);
+		scrollPane.setBounds(346, 36, 468, 310);
 		contentPane.add(scrollPane);
-
+		
 		table = new JTable();
 		scrollPane.setViewportView(table);
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				table=(JTable)e.getSource();
+				Point point=e.getPoint();
+				int row=table.rowAtPoint(point);
+				if(e.getClickCount()==1) {
+					txtId.setText(table.getValueAt(table.getSelectedRow(), 0).toString());
+					txtDni.setText(table.getValueAt(table.getSelectedRow(), 1).toString());
+					txtNombres.setText(table.getValueAt(table.getSelectedRow(), 2).toString());
+					txtApellidos.setText(table.getValueAt(table.getSelectedRow(), 3).toString());
+					txtNro.setText(table.getValueAt(table.getSelectedRow(), 4).toString());
+						
+				}
+			}
+		});
+
 
 		JButton btnActTb = new JButton("ACTUALIZAR TABLA");
 		btnActTb.addActionListener(new ActionListener() {
@@ -310,11 +374,11 @@ public class App extends JFrame {
 				cargarTabla();
 			}
 		});
-		btnActTb.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		btnActTb.setFont(new Font("Tahoma", Font.BOLD, 9));
 		btnActTb.setBounds(356, 357, 171, 23);
 		contentPane.add(btnActTb);
 
-		JButton btnEliminar = new JButton("ELIMINAR PA.");
+		JButton btnEliminar = new JButton("ELIMINAR");
 		btnEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int idPaciente;
@@ -322,15 +386,35 @@ public class App extends JFrame {
 				begin();
 				eliminar(idPaciente);
 				end();
-				
+				JOptionPane.showMessageDialog(null, "Paciente ELIMINADO con EXITO!!");
+				txtBuscar.setText("");
 				cargarTabla();
 			}
 		});
-		btnEliminar.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		btnEliminar.setFont(new Font("Tahoma", Font.BOLD, 9));
 		btnEliminar.setBounds(229, 306, 99, 23);
 		contentPane.add(btnEliminar);
 
 		g1.add(rdbtnMasculino);
 		g1.add(rdbtnFemenino);
+		
+		JButton btnLimpiar = new JButton("Limpiar");
+		btnLimpiar.setFont(new Font("Tahoma", Font.BOLD, 9));
+		btnLimpiar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				txtId.setText("");
+				txtDni.setText("");
+				txtNombres.setText("");
+				txtApellidos.setText("");
+				txtNro.setText("");
+				g1.clearSelection();
+				txtDni.requestFocus();
+			}
+		});
+		btnLimpiar.setBounds(129, 235, 73, 23);
+		panel.add(btnLimpiar);
+		
+		
 	}
 }
