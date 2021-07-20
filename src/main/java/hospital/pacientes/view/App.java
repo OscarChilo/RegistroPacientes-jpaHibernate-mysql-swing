@@ -24,6 +24,7 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JDesktopPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
@@ -33,10 +34,13 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JScrollPane;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 public class App extends JFrame {
 
-	private JPanel contentPane;
+	private JPanel escritorio1;
 	private JTextField txtId;
 	private JTextField txtDni;
 	private JTextField txtNombres;
@@ -44,6 +48,8 @@ public class App extends JFrame {
 	private JTextField txtNro;
 	private JTextField txtBuscar;
 	private JTable table;
+	
+	public static String pro;
 
 	static EntityManagerFactory factory;
 	static EntityManager entityManager;;
@@ -145,22 +151,26 @@ public class App extends JFrame {
 	 */
 	public App() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 840, 451);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
+		setBounds(100, 100, 855, 516);
+		escritorio1 = new JPanel();
+		escritorio1.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(escritorio1);
+		escritorio1.setLayout(null);
+		
+		JDesktopPane escritorio = new JDesktopPane();
+		escritorio.setBounds(0, 0, 839, 477);
+		escritorio1.add(escritorio);
 
 		JLabel lblNewLabel = new JLabel("HOSPITAL COVID (PACIENTES)");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setFont(new Font("Maiandra GD", Font.BOLD, 15));
-		lblNewLabel.setBounds(282, 0, 239, 23);
-		contentPane.add(lblNewLabel);
+		lblNewLabel.setBounds(296, 45, 239, 23);
+		escritorio.add(lblNewLabel);
 
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Registro", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.setBounds(10, 36, 326, 269);
-		contentPane.add(panel);
+		panel.setBounds(20, 92, 326, 269);
+		escritorio.add(panel);
 		panel.setLayout(null);
 
 		JLabel lblNewLabel_1 = new JLabel("ID                   :");
@@ -271,8 +281,8 @@ public class App extends JFrame {
 			}
 		});
 		btnAgregar.setFont(new Font("Tahoma", Font.BOLD, 9));
-		btnAgregar.setBounds(10, 306, 99, 23);
-		contentPane.add(btnAgregar);
+		btnAgregar.setBounds(20, 364, 99, 23);
+		escritorio.add(btnAgregar);
 
 		JButton btnActualizar = new JButton("ACTUALIZAR");
 		btnActualizar.addActionListener(new ActionListener() {
@@ -317,8 +327,8 @@ public class App extends JFrame {
 			}
 		});
 		btnActualizar.setFont(new Font("Tahoma", Font.BOLD, 9));
-		btnActualizar.setBounds(113, 307, 113, 23);
-		contentPane.add(btnActualizar);
+		btnActualizar.setBounds(123, 365, 113, 23);
+		escritorio.add(btnActualizar);
 
 		JButton btnBuscar = new JButton("BUSCAR");
 		btnBuscar.addActionListener(new ActionListener() {
@@ -332,21 +342,21 @@ public class App extends JFrame {
 			}
 		});
 		btnBuscar.setFont(new Font("Tahoma", Font.BOLD, 9));
-		btnBuscar.setBounds(239, 357, 89, 23);
-		contentPane.add(btnBuscar);
+		btnBuscar.setBounds(249, 415, 89, 23);
+		escritorio.add(btnBuscar);
 
 		JLabel lblNewLabel_7 = new JLabel("ID Paciente");
-		lblNewLabel_7.setBounds(10, 361, 81, 14);
-		contentPane.add(lblNewLabel_7);
+		lblNewLabel_7.setBounds(20, 419, 81, 14);
+		escritorio.add(lblNewLabel_7);
 
 		txtBuscar = new JTextField();
-		txtBuscar.setBounds(83, 358, 146, 20);
-		contentPane.add(txtBuscar);
+		txtBuscar.setBounds(93, 416, 146, 20);
+		escritorio.add(txtBuscar);
 		txtBuscar.setColumns(10);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(346, 36, 468, 310);
-		contentPane.add(scrollPane);
+		scrollPane.setBounds(356, 94, 468, 310);
+		escritorio.add(scrollPane);
 		
 		table = new JTable();
 		scrollPane.setViewportView(table);
@@ -368,15 +378,15 @@ public class App extends JFrame {
 		});
 
 
-		JButton btnActTb = new JButton("ACTUALIZAR TABLA");
+		JButton btnActTb = new JButton("MOSTRAR TABLA");
 		btnActTb.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cargarTabla();
 			}
 		});
 		btnActTb.setFont(new Font("Tahoma", Font.BOLD, 9));
-		btnActTb.setBounds(356, 357, 171, 23);
-		contentPane.add(btnActTb);
+		btnActTb.setBounds(522, 415, 171, 40);
+		escritorio.add(btnActTb);
 
 		JButton btnEliminar = new JButton("ELIMINAR");
 		btnEliminar.addActionListener(new ActionListener() {
@@ -392,8 +402,8 @@ public class App extends JFrame {
 			}
 		});
 		btnEliminar.setFont(new Font("Tahoma", Font.BOLD, 9));
-		btnEliminar.setBounds(229, 306, 99, 23);
-		contentPane.add(btnEliminar);
+		btnEliminar.setBounds(239, 364, 99, 23);
+		escritorio.add(btnEliminar);
 
 		g1.add(rdbtnMasculino);
 		g1.add(rdbtnFemenino);
@@ -414,6 +424,34 @@ public class App extends JFrame {
 		});
 		btnLimpiar.setBounds(129, 235, 73, 23);
 		panel.add(btnLimpiar);
+		
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.setBounds(0, 0, 187, 22);
+		escritorio.add(menuBar);
+		
+		JMenu mnNewMenu = new JMenu("SISTEMA");
+		mnNewMenu.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+		menuBar.add(mnNewMenu);
+		
+		JMenuItem mntmNewMenuItem = new JMenuItem("Salir");
+		mntmNewMenuItem.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+		mnNewMenu.add(mntmNewMenuItem);
+		
+		JMenu mnNewMenu_1 = new JMenu("MANTENIMIENTO");
+		mnNewMenu_1.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+		menuBar.add(mnNewMenu_1);
+		
+		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Signos Vitales");
+		mntmNewMenuItem_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				//String p=JSigno.pro;
+				
+				
+			}
+		});
+		mntmNewMenuItem_2.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+		mnNewMenu_1.add(mntmNewMenuItem_2);
 		
 		
 	}
