@@ -3,6 +3,7 @@ package hospital.pacientes.view;
 import hospital.pacientes.*;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -37,6 +38,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import java.awt.SystemColor;
 
 public class App extends JFrame {
 
@@ -158,6 +160,7 @@ public class App extends JFrame {
 		escritorio1.setLayout(null);
 		
 		JDesktopPane escritorio = new JDesktopPane();
+		escritorio.setBackground(SystemColor.menu);
 		escritorio.setBounds(0, 0, 839, 477);
 		escritorio1.add(escritorio);
 
@@ -426,7 +429,7 @@ public class App extends JFrame {
 		panel.add(btnLimpiar);
 		
 		JMenuBar menuBar = new JMenuBar();
-		menuBar.setBounds(0, 0, 187, 22);
+		menuBar.setBounds(0, 0, 839, 22);
 		escritorio.add(menuBar);
 		
 		JMenu mnNewMenu = new JMenu("SISTEMA");
@@ -445,8 +448,16 @@ public class App extends JFrame {
 		mntmNewMenuItem_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				//String p=JSigno.pro;
+				JSigno nuevaVentana=new JSigno();
 				
+				if(nuevaVentana.isVisible()!=true) {
+				escritorio.add(nuevaVentana);
+				nuevaVentana.setVisible(true);
+				Dimension desktopSize = escritorio.getSize();
+		        Dimension FrameSize = nuevaVentana.getSize();
+		        nuevaVentana.setLocation((desktopSize.width - FrameSize.width)/2, (desktopSize.height- FrameSize.height)/2);
+		        nuevaVentana.show();
+				}
 				
 			}
 		});

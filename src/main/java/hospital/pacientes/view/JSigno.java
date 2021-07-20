@@ -47,16 +47,10 @@ public class JSigno extends JInternalFrame {
 		setClosable(true);
 		setMaximizable(true);
 		setIconifiable(true);
-		setBounds(100, 100, 855, 516);
+		setBounds(100, 100, 747, 472);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
-		
-		JMenu mnNewMenu = new JMenu("SISTEMA");
-		menuBar.add(mnNewMenu);
-		
-		JMenuItem mntmNewMenuItem = new JMenuItem("Salir");
-		mnNewMenu.add(mntmNewMenuItem);
 		getContentPane().setLayout(null);
 		
 		JPanel panel = new JPanel();
@@ -101,6 +95,7 @@ public class JSigno extends JInternalFrame {
 		panel.add(lblNewLabel_5);
 		
 		JButton btnNewButton = new JButton("Limpiar");
+		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
@@ -110,32 +105,35 @@ public class JSigno extends JInternalFrame {
 		
 		JLabel lblNewLabel = new JLabel("SIGNOS VITALES");
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 17));
-		lblNewLabel.setBounds(390, 21, 146, 21);
+		lblNewLabel.setBounds(343, 22, 146, 21);
 		getContentPane().add(lblNewLabel);
 		
 		JButton btnNewButton_1 = new JButton("GUARDAR");
+		btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		btnNewButton_1.setBounds(115, 336, 89, 23);
 		getContentPane().add(btnNewButton_1);
 		
 		JLabel lblNewLabel_6 = new JLabel("ID Paciente");
-		lblNewLabel_6.setBounds(32, 403, 55, 14);
+		lblNewLabel_6.setBounds(30, 383, 55, 14);
 		getContentPane().add(lblNewLabel_6);
 		
 		textField_3 = new JTextField();
-		textField_3.setBounds(97, 400, 97, 20);
+		textField_3.setBounds(95, 380, 97, 20);
 		getContentPane().add(textField_3);
 		textField_3.setColumns(10);
 		
 		JButton btnNewButton_2 = new JButton("BUSCAR");
-		btnNewButton_2.setBounds(203, 399, 73, 23);
+		btnNewButton_2.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		btnNewButton_2.setBounds(201, 379, 73, 23);
 		getContentPane().add(btnNewButton_2);
 		
 		table = new JTable();
-		table.setBounds(312, 83, 393, 307);
+		table.setBounds(312, 83, 393, 276);
 		getContentPane().add(table);
 		
 		JButton btnNewButton_3 = new JButton("MOSTRAR TABLA");
-		btnNewButton_3.setBounds(312, 399, 115, 23);
+		btnNewButton_3.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		btnNewButton_3.setBounds(466, 370, 131, 34);
 		getContentPane().add(btnNewButton_3);
 
 	}
