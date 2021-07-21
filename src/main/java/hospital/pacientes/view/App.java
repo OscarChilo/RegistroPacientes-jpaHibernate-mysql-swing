@@ -71,6 +71,7 @@ public class App extends JFrame {
 			public void run() {
 				try {
 					App frame = new App();
+					frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -79,19 +80,19 @@ public class App extends JFrame {
 		});
 	}
 
-	private static void begin() {
+	public static void begin() {
 
-		factory = Persistence.createEntityManagerFactory("PacienteUnit");
+		factory = Persistence.createEntityManagerFactory("HospitalUnit");
 		entityManager = factory.createEntityManager();
 
 		entityManager.getTransaction().begin();
 	}
 	
-	private static void create() {
+	public static void create() {
 		
 	}
 
-	private static void end() {
+	public static void end() {
 
 		entityManager.getTransaction().commit();
 		entityManager.close();
@@ -152,6 +153,9 @@ public class App extends JFrame {
 	 * Create the frame.
 	 */
 	public App() {
+		
+		//initComponents();
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 855, 516);
 		escritorio1 = new JPanel();
@@ -161,7 +165,7 @@ public class App extends JFrame {
 		
 		JDesktopPane escritorio = new JDesktopPane();
 		escritorio.setBackground(SystemColor.menu);
-		escritorio.setBounds(0, 0, 839, 477);
+		escritorio.setBounds(0, 21, 1280, 700);
 		escritorio1.add(escritorio);
 
 		JLabel lblNewLabel = new JLabel("HOSPITAL COVID (PACIENTES)");
@@ -430,7 +434,7 @@ public class App extends JFrame {
 		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBounds(0, 0, 839, 22);
-		escritorio.add(menuBar);
+		escritorio1.add(menuBar);
 		
 		JMenu mnNewMenu = new JMenu("SISTEMA");
 		mnNewMenu.setFont(new Font("Segoe UI", Font.PLAIN, 11));
@@ -449,15 +453,22 @@ public class App extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				JSigno nuevaVentana=new JSigno();
-				
-				if(nuevaVentana.isVisible()!=true) {
 				escritorio.add(nuevaVentana);
-				nuevaVentana.setVisible(true);
+
+				//nuevaVentana.setRelativeLocation();
+				//nuevaVentana.setVisible(true);
+				/*int width=escritorio.getWidth();
+				int heigth=escritorio.getHeight();
+				nuevaVentana.setSize(width,heigth);
+				nuevaVentana.setLocation(null);*/
+				
 				Dimension desktopSize = escritorio.getSize();
 		        Dimension FrameSize = nuevaVentana.getSize();
+		        //nuevaVentana.setMaximizable(true);
+		        //nuevaVentana.setma;
 		        nuevaVentana.setLocation((desktopSize.width - FrameSize.width)/2, (desktopSize.height- FrameSize.height)/2);
 		        nuevaVentana.show();
-				}
+				
 				
 			}
 		});

@@ -5,7 +5,9 @@
           http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
         version="2.1">
         
-        <persistence-unit name="PacienteUnit">
+        <persistence-unit name="HospitalUnit">
+        	<class>hospital.pacientes.Paciente</class>
+        	<class>hospital.pacientes.Signo</class>
         	<properties>
         		<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/hospitalbd"/>
         		<property name="javax.persistence.jdbc.user" value="root"/>
@@ -15,4 +17,5 @@
         		<property name="hibernate.format_sql" value="true"/>
         	</properties>
         </persistence-unit>
+        
 </persistence>
