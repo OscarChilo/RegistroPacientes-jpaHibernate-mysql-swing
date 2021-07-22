@@ -13,26 +13,41 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
+
+import com.panayotis.gnuplot.GNUPlotParameters;
+import com.panayotis.gnuplot.JavaPlot;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
+import javax.swing.JScrollPane;
 
 public class JSigno extends JInternalFrame {
 	public JTextField txtIdpa;
 	public JTextField txtTemp;
 	public JTextField txtSatu;
 	public JTextField txtBuscar;
-	private JTable table;
+	private JTable tableSigns;
 	
 	static EntityManagerFactory factory;
 	static EntityManager entityManager;;
@@ -77,6 +92,44 @@ public class JSigno extends JInternalFrame {
 		txtTemp.requestFocus();
 		
 	}
+	public void listBuscar(JTable tabla,int clave){
+			
+		DefaultTableModel model = new DefaultTableModel(null, new Object[] {"NRO","ID_SIGNOS","ID_PACIENTE","APELLIDOS","SATURACION","TEMPERATURA","FECHA"});
+		
+	
+		String jpql = "SELECT s FROM Signo s WHERE s.idPaciente LIKE :idpaciente";
+		Query query = entityManager.createQuery(jpql).setParameter("idpaciente", clave);
+	
+		@SuppressWarnings("unchecked")
+		List<Signo> listSignos = query.getResultList();
+	
+		int count=1;
+		for (Signo s : listSignos) {
+			model.addRow(new Object[] {count,s.getIdSigno(),s.getIdPaciente(),s.getApellidos(),s.getSaturacion(),s.getTemperatura(),s.getFecha()});
+			count++;
+		}
+		tabla.setModel(model);
+	
+		}
+		
+	public void listarTabla(JTable tabla) {
+	
+		DefaultTableModel model = new DefaultTableModel(null, new Object[] {"ID_SIGNOS","ID_PACIENTE","APELLIDOS","SATURACION","TEMPERATURA","FECHA"});
+		
+	
+		String jpql = "SELECT p FROM Signo p";
+		Query query = entityManager.createQuery(jpql);
+	
+		@SuppressWarnings("unchecked")
+		List<Signo> listSignos = query.getResultList();
+	
+		
+		for (Signo s : listSignos) {
+			model.addRow(new Object[] {s.getIdSigno(),s.getIdPaciente(),s.getApellidos(),s.getSaturacion(),s.getTemperatura(),s.getFecha()});
+		}
+		tabla.setModel(model);
+	
+	}
 	
 
 	/**
@@ -88,7 +141,7 @@ public class JSigno extends JInternalFrame {
 		setClosable(true);
 		//setMaximizable(true);
 		setIconifiable(true);
-		setBounds(100, 100, 1100, 516);
+		setBounds(100, 100, 930, 516);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -142,6 +195,7 @@ public class JSigno extends JInternalFrame {
 		btnLimpiar.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		btnLimpiar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				limpiar();
 			}
 		});
 		btnLimpiar.setBounds(93, 205, 89, 23);
@@ -149,7 +203,7 @@ public class JSigno extends JInternalFrame {
 		
 		JLabel lblNewLabel = new JLabel("SIGNOS VITALES");
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 17));
-		lblNewLabel.setBounds(343, 22, 146, 21);
+		lblNewLabel.setBounds(391, 25, 146, 21);
 		getContentPane().add(lblNewLabel);
 		
 		JButton btnGuardar = new JButton("GUARDAR");
@@ -159,24 +213,26 @@ public class JSigno extends JInternalFrame {
 				int  temp,idPa;
 				double satu;
 				
-				Date fecha=new Date();
-				DateFormat formato = new SimpleDateFormat("dd/MM/YYYY");
-				System.out.println(fecha);
+				Paciente paciente=new Paciente();
 				Signo newSigno=new Signo();
-				//String nombre=
+				
+				Date fecha=new Date();
+				
+				begin();
 				idPa=Integer.parseInt(txtIdpa.getText());
+				paciente=entityManager.find(Paciente.class, idPa);
+				String apellido=paciente.getApellidos();
 				temp=Integer.parseInt(txtTemp.getText());
 				satu=Double.parseDouble(txtSatu.getText());
 				
-				begin();
-				
 				newSigno.setIdPaciente(idPa);
-				newSigno.setApellidos("toledo");
+				newSigno.setApellidos(apellido);
 				newSigno.setSaturacion(satu);
 				newSigno.setTemperatura(temp);
-				newSigno.setFecha(null);
-				//newSigno.setIdPaciente(null);
+				newSigno.setFecha(fecha);
+				
 				entityManager.persist(newSigno);
+				
 				System.out.println(fecha);
 				end();
 				JOptionPane.showMessageDialog(null, "Signos vitales NUEVO REGISTRADO con EXITO!!");
@@ -200,17 +256,105 @@ public class JSigno extends JInternalFrame {
 		txtBuscar.setColumns(10);
 		
 		JButton btnBuscar = new JButton("BUSCAR");
+		btnBuscar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int idbuscar=Integer.parseInt(txtBuscar.getText());
+				begin();
+				listBuscar(tableSigns,idbuscar);
+			
+				String jpqls = "SELECT s.saturacion FROM Signo s WHERE s.idPaciente LIKE :idpaciente";
+				String jpqlt = "SELECT s.temperatura FROM Signo s WHERE s.idPaciente LIKE :idpaciente";
+				Query querys = entityManager.createQuery(jpqls).setParameter("idpaciente", idbuscar);
+				Query queryt = entityManager.createQuery(jpqlt).setParameter("idpaciente", idbuscar);
+			
+				@SuppressWarnings("unchecked")
+				List<Signo> listTemperatura = queryt.getResultList();
+				@SuppressWarnings("unchecked")
+				List<Signo> listSaturacion = querys.getResultList();
+				
+				for (int p=0 ;p<listTemperatura.size();p++) {
+					System.out.println((p+1)+" "+listTemperatura.get(p)+"\n");
+				}
+				
+				
+				//GRAFICANDO EN GNUPLOT
+				
+				// txtIdpa
+				String id = txtBuscar.getText(); // Llama txtBuscar para graficar el id en el HashMap
+				
+				try {
+					File temperatura = null;
+					File saturacion = null;
+					BufferedWriter bw = null;
+					BufferedWriter bw2 = null;
+					temperatura = new File("temperatura.txt");
+					saturacion = new File("saturacion.txt");
+					temperatura.createNewFile();
+					saturacion.createNewFile();
+					bw = new BufferedWriter(new FileWriter(temperatura));
+					bw2 = new BufferedWriter(new FileWriter(saturacion));
+					
+					int cont = 1;
+					for(int  i =0; i<listTemperatura.size();i++) {
+						bw.write((i+1) + " " + listTemperatura.get(i) +"\t"); // tiempo x temperatura
+						bw.newLine();
+						cont++;
+					}
+					
+					for(int  j =0; j<listSaturacion.size();j++) {
+						bw2.write((j+1) + " " + listSaturacion.get(j) +"\t"); // tiempo x temperatura
+						bw2.newLine();
+						cont++;
+					}
+					
+					bw.close();
+					bw2.close();
+					//Desktop.getDesktop().open(gnu);
+					//Desktop.getDesktop().open(gnu2);
+					JavaPlot p = new JavaPlot();
+					
+					GNUPlotParameters params=p.getParameters();
+					p.setTitle("Signos Vitales");
+					params.set("xlabel 'FECHAS'");
+					params.set("ylabel 'TEMPERATURA   Y   SATURACION'");
+
+			        p.addPlot("\"temperatura.txt\" with lines");
+			        p.addPlot("\"saturacion.txt\" with lines");
+			        p.plot();
+					
+					
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				
+				//JOptionPane.showMessageDialog(null, "Graficado con EXITO!!");
+				limpiar();
+							
+				
+				end();
+			}
+		});
 		btnBuscar.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		btnBuscar.setBounds(201, 379, 73, 23);
 		getContentPane().add(btnBuscar);
 		
-		table = new JTable();
-		table.setBounds(312, 83, 393, 276);
-		getContentPane().add(table);
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(312, 83, 592, 276);
+		getContentPane().add(scrollPane);
+		
+		tableSigns = new JTable();
+		scrollPane.setViewportView(tableSigns);
 		
 		JButton btnMostrar = new JButton("MOSTRAR TABLA");
+		btnMostrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				begin();
+				listarTabla(tableSigns);
+				end();
+			}
+		});
 		btnMostrar.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		btnMostrar.setBounds(466, 370, 131, 34);
+		btnMostrar.setBounds(533, 373, 131, 34);
 		getContentPane().add(btnMostrar);
 
 	}

@@ -157,7 +157,7 @@ public class App extends JFrame {
 		//initComponents();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 855, 516);
+		setBounds(100, 100, 1168, 561);
 		escritorio1 = new JPanel();
 		escritorio1.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(escritorio1);
@@ -168,15 +168,15 @@ public class App extends JFrame {
 		escritorio.setBounds(0, 21, 1280, 700);
 		escritorio1.add(escritorio);
 
-		JLabel lblNewLabel = new JLabel("HOSPITAL COVID (PACIENTES)");
+		JLabel lblNewLabel = new JLabel("HOSPITAL BICENTENARIO (PACIENTES)");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setFont(new Font("Maiandra GD", Font.BOLD, 15));
-		lblNewLabel.setBounds(296, 45, 239, 23);
+		lblNewLabel.setBounds(475, 31, 289, 23);
 		escritorio.add(lblNewLabel);
 
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Registro", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.setBounds(20, 92, 326, 269);
+		panel.setBounds(78, 94, 340, 269);
 		escritorio.add(panel);
 		panel.setLayout(null);
 
@@ -288,7 +288,7 @@ public class App extends JFrame {
 			}
 		});
 		btnAgregar.setFont(new Font("Tahoma", Font.BOLD, 9));
-		btnAgregar.setBounds(20, 364, 99, 23);
+		btnAgregar.setBounds(88, 382, 99, 23);
 		escritorio.add(btnAgregar);
 
 		JButton btnActualizar = new JButton("ACTUALIZAR");
@@ -334,7 +334,7 @@ public class App extends JFrame {
 			}
 		});
 		btnActualizar.setFont(new Font("Tahoma", Font.BOLD, 9));
-		btnActualizar.setBounds(123, 365, 113, 23);
+		btnActualizar.setBounds(191, 383, 113, 23);
 		escritorio.add(btnActualizar);
 
 		JButton btnBuscar = new JButton("BUSCAR");
@@ -349,20 +349,20 @@ public class App extends JFrame {
 			}
 		});
 		btnBuscar.setFont(new Font("Tahoma", Font.BOLD, 9));
-		btnBuscar.setBounds(249, 415, 89, 23);
+		btnBuscar.setBounds(317, 434, 89, 23);
 		escritorio.add(btnBuscar);
 
 		JLabel lblNewLabel_7 = new JLabel("ID Paciente");
-		lblNewLabel_7.setBounds(20, 419, 81, 14);
+		lblNewLabel_7.setBounds(88, 438, 81, 14);
 		escritorio.add(lblNewLabel_7);
 
 		txtBuscar = new JTextField();
-		txtBuscar.setBounds(93, 416, 146, 20);
+		txtBuscar.setBounds(161, 435, 146, 20);
 		escritorio.add(txtBuscar);
 		txtBuscar.setColumns(10);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(356, 94, 468, 310);
+		scrollPane.setBounds(431, 96, 652, 310);
 		escritorio.add(scrollPane);
 		
 		table = new JTable();
@@ -392,7 +392,7 @@ public class App extends JFrame {
 			}
 		});
 		btnActTb.setFont(new Font("Tahoma", Font.BOLD, 9));
-		btnActTb.setBounds(522, 415, 171, 40);
+		btnActTb.setBounds(670, 417, 171, 40);
 		escritorio.add(btnActTb);
 
 		JButton btnEliminar = new JButton("ELIMINAR");
@@ -409,7 +409,7 @@ public class App extends JFrame {
 			}
 		});
 		btnEliminar.setFont(new Font("Tahoma", Font.BOLD, 9));
-		btnEliminar.setBounds(239, 364, 99, 23);
+		btnEliminar.setBounds(307, 382, 99, 23);
 		escritorio.add(btnEliminar);
 
 		g1.add(rdbtnMasculino);
@@ -466,7 +466,7 @@ public class App extends JFrame {
 		        Dimension FrameSize = nuevaVentana.getSize();
 		        //nuevaVentana.setMaximizable(true);
 		        //nuevaVentana.setma;
-		        nuevaVentana.setLocation((desktopSize.width - FrameSize.width)/2, (desktopSize.height- FrameSize.height)/2);
+		        nuevaVentana.setLocation((desktopSize.width - FrameSize.width)/20, (desktopSize.height- FrameSize.height)/3);
 		        nuevaVentana.show();
 				
 				

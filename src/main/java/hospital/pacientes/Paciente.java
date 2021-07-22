@@ -23,7 +23,7 @@ public class Paciente {
 	private String nombres;
     
     @Column(name="SURNAMES")
-	private String apellidos;
+	public String apellidos;
     
     @Column(name="NUMBERPHONE")
 	private String nroCel;
